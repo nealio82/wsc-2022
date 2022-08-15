@@ -23,19 +23,19 @@ composer: ## Installs the latest Composer dependencies within running instance
 ##@ Frontend
 
 .PHONY: yarn
-yarn:
-	$(COMPOSE) run node yarn $(cmd) ## Run a yarn command with an argument (eg make yarn cmd='add react react-dom')
+yarn: ## Run a yarn command with an argument (eg make yarn cmd='add react react-dom')
+	$(COMPOSE) run node yarn $(cmd)
 
 .PHONY: yarn-install
-yarn-install:
+yarn-install: ## Installs yarn deps
 	$(COMPOSE) run node yarn install
 
 .PHONY: yarn-build
-yarn-build:
+yarn-build: ## Build frontend assets
 	$(COMPOSE) run node yarn build
 
 .PHONY: yarn-watch
-yarn-watch:
+yarn-watch: ## Yarn dev mode
 	$(COMPOSE) run node yarn build --watch
 
 ##@ Running Instance

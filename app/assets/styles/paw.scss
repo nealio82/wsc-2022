@@ -1,0 +1,171 @@
+// Thanks to https://codepen.io/MoritzGiessmann/pen/PoEKKg for the cat's paw CSS!
+
+$big-paw-width:22%;
+$big-paw-height:32%;
+$big-paw-outer-offset:25%;
+$big-paw-top-offset:10%;
+$small-paw-width:18%;
+$small-paw-height:30%;
+$small-paw-outer-offset:10%;
+$small-paw-top-offset:35%;
+$small-paw-rotation: 30deg;
+
+.paw {
+  width:300px;
+  height:300px;
+  position: relative;
+  border-radius: 50%;
+  -webkit-transition: all .5s cubic-bezier(0,.73,.73,1.52);
+  transition: all .5s cubic-bezier(0,.73,.73,1.52);
+
+  &.huge {
+    width:1000px;
+    height:1000px;
+  }
+
+  &:before,
+  &:after {
+    position: absolute;
+    z-index: 10;
+  }
+
+  &:before {
+    content:'';
+    display:block;
+    width: $big-paw-width;
+    height: $big-paw-height;
+    background:#333;
+    border-radius:50%  50%  50%  50%  / 60%   60%   40%  40%;
+    left:$big-paw-outer-offset;
+    top:$big-paw-top-offset;
+    transform:rotate(-15deg)
+  }
+
+  &:after {
+    content:'';
+    display:block;
+    width: $big-paw-width;
+    height: $big-paw-height;
+    background:#333;
+    border-radius:50%  50%  50%  50%  / 60%   60%   40%  40%;
+    right:$big-paw-outer-offset;
+    top:$big-paw-top-offset;
+    transform:rotate(15deg)
+  }
+}
+
+.inner {
+  width:100%;
+  height:100%;
+  position: relative;
+
+  &:before,
+  &:after {
+    position: absolute;
+    z-index: 10;
+  }
+
+  &:before {
+    content:'';
+    display:block;
+    width: $small-paw-width;
+    height: $small-paw-height;
+    background:#333;
+    border-radius:50%  50%  50%  50%  / 60%   60%   40%  40%;
+    left:$small-paw-outer-offset;
+    top:$small-paw-top-offset;
+    transform:rotate(-$small-paw-rotation)
+  }
+
+  &:after {
+    content:'';
+    display:block;
+    width: $small-paw-width;
+    height: $small-paw-height;
+    background:#333;
+    border-radius:50%  50%  50%  50%  / 60%   60%   40%  40%;
+    right:$small-paw-outer-offset;
+    top:$small-paw-top-offset;
+    transform:rotate($small-paw-rotation)
+  }
+}
+
+.bottom {
+  width: 48%;
+  height: 30%;
+  background:#333;
+  border-radius:70%  70%  50%  50%  / 90%   90%   50%  50%;
+  position: absolute;
+  bottom:12%;
+  left:26%;
+
+  &:before {
+    content:'';
+    position: absolute;
+    bottom:-11%;
+    left:0;
+    background: #333;
+    width:50%;
+    height:75%;
+    border-radius: 55% 105% 68% 79% / 60% 60% 29% 50%;
+    z-index: 1000;
+  }
+
+  &:after {
+    content:'';
+    position: absolute;
+    bottom:-11%;
+    right:0;
+    background: #333;
+    width:50%;
+    height:75%;
+    border-radius:105% 55% 79% 68% / 60% 60% 50% 29%;
+    z-index: 1000;
+  }
+}
+
+
+/*
+ * Dummy devices (replace them with your own or something else entirely!)
+ */
+
+.paw-container {
+  position: absolute;
+  right: 10%;
+  bottom: -30%;
+  width: 300px;
+  height: 540px;
+  border-radius: 21px;
+  transform: rotate(30deg);
+}
+
+.paw-container::before {
+  position: absolute;
+  top: 10%;
+  right: 10px;
+  bottom: 10%;
+  left: 10px;
+  content: "";
+  border-radius: 5px;
+}
+
+.paw-container-2 {
+  top: -25%;
+  right: auto;
+  bottom: 0;
+  left: 5%;
+}
+
+
+/*
+ * Extra utilities
+ */
+
+.flex-equal > * {
+  flex: 1;
+}
+@media (min-width: 768px) {
+  .flex-md-equal > * {
+    flex: 1;
+  }
+}
