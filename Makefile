@@ -20,6 +20,10 @@ stop: ## Stop and clean-up the application (remove containers, networks, images,
 composer: ## Installs the latest Composer dependencies within running instance
 	$(APP) composer install --no-interaction --no-ansi
 
+db: ## (Re)creates the development database (with migrations)
+	$(APP) bin/console doctrine:database:create
+	$(APP) bin/console doctrine:schema:create
+
 ##@ Frontend
 
 .PHONY: yarn
