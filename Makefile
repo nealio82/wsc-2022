@@ -7,7 +7,7 @@ APP := $(COMPOSE) exec -T php
 ##@ Setup
 
 .PHONY: start
-start: up composer ## Boots the application in development mode
+start: up composer db ## Boots the application in development mode
 
 up:
 	$(COMPOSE) up -d --build --force-recreate
@@ -21,6 +21,7 @@ composer: ## Installs the latest Composer dependencies within running instance
 	$(APP) composer install --no-interaction --no-ansi
 
 db: ## (Re)creates the development database (with migrations)
+	$(APP) bin/console doctrine:database:drop --force
 	$(APP) bin/console doctrine:database:create
 	$(APP) bin/console doctrine:schema:create
 

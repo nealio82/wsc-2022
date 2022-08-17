@@ -19,8 +19,8 @@ class Kitty
     #[ORM\Column(length: 255)]
     private string $intro;
 
-    #[ORM\Column(length: 255)]
-    private string $avatarUrl;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $avatarUrl;
 
     public function getId(): ?int
     {
@@ -52,7 +52,7 @@ class Kitty
         $this->avatarUrl = $avatarUrl;
     }
 
-    public function getAvatarUrl(): string
+    public function getAvatarUrl(): ?string
     {
         return $this->avatarUrl;
     }
