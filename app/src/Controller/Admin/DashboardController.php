@@ -20,6 +20,13 @@ class DashboardController extends AbstractDashboardController
          return $this->redirect($adminUrlGenerator->setController(KittyCrudController::class)->generateUrl());
     }
 
+    // click 'start', load random kitty
+    // swipe left or right
+    // if match, put into queue for processing
+
+    // @todo: we can use processing the matches and updating a counter in the
+    // database as an example of something going through the queue
+
     public function configureMenuItems(): iterable
     {
         return [

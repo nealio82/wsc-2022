@@ -14,6 +14,7 @@ up:
 
 .PHONY: stop
 stop: ## Stop and clean-up the application (remove containers, networks, images, and volumes)
+	$(APP) bin/console doctrine:database:drop --force
 	$(COMPOSE) down -v --remove-orphans
 
 .PHONY: composer
@@ -21,9 +22,9 @@ composer: ## Installs the latest Composer dependencies within running instance
 	$(APP) composer install --no-interaction --no-ansi
 
 db: ## (Re)creates the development database (with migrations)
-	$(APP) bin/console doctrine:database:drop --force
 	$(APP) bin/console doctrine:database:create
 	$(APP) bin/console doctrine:schema:create
+	$(APP) bin/console doctrine:fixtures:load
 
 ##@ Frontend
 

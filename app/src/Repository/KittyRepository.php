@@ -12,4 +12,13 @@ class KittyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Kitty::class);
     }
+
+    public function findRandomKitty(): Kitty {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT k FROM App:Kitty k ORDER BY RAND()'
+            )
+            ->setMaxResults(1)
+            ->getSingleResult();
+    }
 }
