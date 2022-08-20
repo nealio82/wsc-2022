@@ -19,6 +19,7 @@ class KittyCrudController extends AbstractCrudController
             ->setUploadDir('public/uploads/avatars');
         yield Field::new('name');
         yield Field::new('intro');
+        yield Field::new('countMatches')->setLabel('Matches');
     }
 
     public static function getEntityFqcn(): string

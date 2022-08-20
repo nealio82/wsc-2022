@@ -22,6 +22,9 @@ class Kitty
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarUrl;
 
+    #[ORM\Column]
+    private int $countMatches = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -55,5 +58,15 @@ class Kitty
     public function getAvatarUrl(): ?string
     {
         return $this->avatarUrl;
+    }
+
+    public function getCountMatches(): int
+    {
+        return $this->countMatches;
+    }
+
+    public function incrementMatches(): void
+    {
+        $this->countMatches++;
     }
 }
