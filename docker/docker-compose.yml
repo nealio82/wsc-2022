@@ -73,9 +73,18 @@ services:
       - ../app:/var/www/project
     networks:
       - scratch_dot_com
+
+  serverless:
+    build:
+      context: .
+      dockerfile: sls.Dockerfile
+    container_name: scratch-dot-com-serverless
+    working_dir: /var/www/project
+    volumes:
+      - ../app:/var/www/project
     environment:
-      AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
 
   # Log in to the management console with guest:guest at http://localhost:15672/
   rabbitmq:

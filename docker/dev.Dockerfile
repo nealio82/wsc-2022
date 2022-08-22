@@ -19,7 +19,3 @@ RUN curl -sL https://github.com/vimeo/psalm/releases/download/4.22.0/psalm.phar 
 
 # Composer
 COPY --from=docker.io/composer:2.3.4 /usr/bin/composer /usr/bin/
-
-# Serverless
-RUN curl -sL https://github.com/serverless/serverless/releases/download/v3.12.0/serverless-linux-x64 -o /usr/bin/serverless \
- && chmod +x /usr/bin/serverless
