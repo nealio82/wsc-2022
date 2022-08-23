@@ -7,7 +7,7 @@ APP := $(COMPOSE) exec -T php
 ##@ Setup
 
 .PHONY: start
-start: up composer db ## Boots the application in development mode
+start: up composer yarn-install yarn-build db ## Boots the application in development mode
 
 up:
 	$(COMPOSE) up -d --build --force-recreate
