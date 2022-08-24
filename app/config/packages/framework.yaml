@@ -16,6 +16,8 @@ framework:
         packages:
             avatars:
                 base_path: '/uploads/avatars'
+            homepage:
+                base_path: '/homepage-images'
 
     #esi: true
     #fragments: true
