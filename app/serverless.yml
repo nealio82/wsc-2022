@@ -1,0 +1,24 @@
+service: scratch-dot-com
+
+provider:
+    name: aws
+    region: eu-west-1
+    runtime: provided.al2
+
+plugins:
+  - ./vendor/bref/bref
+
+functions:
+    web: # don't forget to change this from the default 'api'
+        handler: public/index.php # point to the Symfony front controller
+        description: ''
+        timeout: 60
+        url: true # let's use a Lambda function URL so we always get the same URL, and better execution limits
+        layers:
+            - ${bref:layer.php-81-fpm}
+
+# Exclude files from deployment
+package:
+    patterns:
+        - '!node_modules/**'
+        - '!tests/**'
