@@ -34,6 +34,13 @@ functions:
         layers:
             - ${bref:layer.php-81-fpm}
 
+    console:
+        handler: bin/console # or 'artisan' for Laravel
+        timeout: 600
+        layers:
+            - ${bref:layer.php-81} # PHP runtime
+            - ${bref:layer.console} # Console layer
+
 resources:
     - ${file(./serverless-config/network-resources.yml)}
     - ${file(./serverless-config/database-resources.yml)}
