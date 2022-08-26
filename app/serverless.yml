@@ -1,9 +1,26 @@
 service: scratch-dot-com
 
+custom:
+    dbUsername: 'SZaJ1DJKDcACk1y1' # should really use secrets manager for this
+    dbPassword: 'Lo1okFQg0Ox4ufTe2X4M' # should really use secrets manager for this
+    dbName: 'scratch_dot_com' # should really use secrets manager for this
+
 provider:
     name: aws
     region: eu-west-1
     runtime: provided.al2
+    environment:
+        DATABASE_URL:
+            !Sub
+            - 'mysql://${self:custom.dbUsername}:${self:custom.dbPassword}@${DB_ENDPOINT}:3306/${self:custom.dbName}?serverVersion=5.7&charset=utf8mb4'
+            - { DB_ENDPOINT: !GetAtt 'RDSCluster.Endpoint.Address' }
+    vpc:
+        securityGroupIds:
+            - !GetAtt ServerlessSecurityGroup.GroupId
+        subnetIds:
+            - !Ref ServerlessSubnetA
+            - !Ref ServerlessSubnetB
+            - !Ref ServerlessSubnetC
 
 plugins:
   - ./vendor/bref/bref
@@ -16,6 +33,10 @@ functions:
         url: true # let's use a Lambda function URL so we always get the same URL, and better execution limits
         layers:
             - ${bref:layer.php-81-fpm}
+
+resources:
+    - ${file(./serverless-config/network-resources.yml)}
+    - ${file(./serverless-config/database-resources.yml)}
 
 # Exclude files from deployment
 package:

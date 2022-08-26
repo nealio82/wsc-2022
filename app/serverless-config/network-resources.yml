@@ -1,0 +1,61 @@
+Resources:
+  ServerlessVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+  ServerlessSubnetA:
+    DependsOn: ServerlessVPC
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: ServerlessVPC
+      AvailabilityZone: ${self:provider.region}a
+      CidrBlock: "10.0.0.0/24"
+  ServerlessSubnetB:
+    DependsOn: ServerlessVPC
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: ServerlessVPC
+      AvailabilityZone: ${self:provider.region}b
+      CidrBlock: "10.0.1.0/24"
+  ServerlessSubnetC:
+    DependsOn: ServerlessVPC
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: ServerlessVPC
+      AvailabilityZone: ${self:provider.region}c
+      CidrBlock: "10.0.2.0/24"
+  ServerlessSecurityGroup:
+    DependsOn: ServerlessVPC
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SecurityGroup for Serverless Functions
+      VpcId:
+        Ref: ServerlessVPC
+  ServerlessStorageSecurityGroup:
+    DependsOn: ServerlessVPC
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Ingress for RDS Instance
+      VpcId:
+        Ref: ServerlessVPC
+      SecurityGroupEgress:
+        - Description: "deny all outbound"
+          IpProtocol: "-1"
+          CidrIp: "127.0.0.1/32"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '3306'
+          ToPort: '3306'
+          SourceSecurityGroupId:
+            Ref: ServerlessSecurityGroup
+  ServerlessRDSSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: "RDS Subnet Group"
+      SubnetIds:
+        - Ref: ServerlessSubnetA
+        - Ref: ServerlessSubnetB
+        - Ref: ServerlessSubnetC

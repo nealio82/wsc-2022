@@ -1,0 +1,27 @@
+Resources:
+  RDSCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      MasterUsername: ${self:custom.dbUsername}
+      MasterUserPassword: ${self:custom.dbPassword}
+      DatabaseName: ${self:custom.dbName}
+      Engine: aurora-mysql
+      EngineMode: serverless
+      DBClusterParameterGroupName: !Ref RDSDBClusterParameterGroup
+      ScalingConfiguration:
+        AutoPause: true
+        MaxCapacity: 8
+        MinCapacity: 1
+        SecondsUntilAutoPause: 300
+      VpcSecurityGroupIds:
+        - !GetAtt ServerlessStorageSecurityGroup.GroupId
+      DBSubnetGroupName: !Ref ServerlessRDSSubnetGroup
+
+  RDSDBClusterParameterGroup:
+    Type: AWS::RDS::DBClusterParameterGroup
+    Properties:
+      Description: CloudFormation Sample Aurora Cluster Parameter Group
+      Family: aurora-mysql5.7
+      Parameters:
+        time_zone: UTC
+        character_set_database: utf8mb4
