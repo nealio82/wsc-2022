@@ -22,3 +22,18 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Controller\Admin\CDNAssetsPackage:
+        arguments:
+            $requestStack: "@request_stack"
+            $cdnBaseUrls:
+                - '%env(ASSETS_BASE_URL)%/admin'
+
+when@prod:
+    services:
+        App\Controller\Admin\CDNAssetsPackage:
+            decorates: EasyCorp\Bundle\EasyAdminBundle\Asset\AssetPackage
+            arguments:
+                $requestStack: "@request_stack"
+                $cdnBaseUrls:
+                    - '%env(ASSETS_BASE_URL)%/admin'

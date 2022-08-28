@@ -17,17 +17,30 @@ framework:
         cookie_samesite: lax
         storage_factory_id: session.storage.factory.native
 
-    assets:
-        packages:
-            avatars:
-                base_path: '/uploads/avatars'
-            homepage:
-                base_path: '/homepage-images'
-
     #esi: true
     #fragments: true
     php_errors:
         log: true
+
+when@dev:
+    framework:
+        assets:
+            packages:
+                avatars:
+                    base_path: '/uploads/avatars'
+                homepage:
+                    base_path: '/homepage-images'
+
+when@prod:
+    framework:
+        assets:
+            packages:
+                avatars:
+                    base_urls:
+                        - '%env(ASSETS_BASE_URL)%/uploads/avatars'
+                homepage:
+                    base_urls:
+                        - '%env(ASSETS_BASE_URL)%/homepage-images'
 
 when@test:
     framework:

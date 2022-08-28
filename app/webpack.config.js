@@ -9,6 +9,30 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
+
+    .copyFiles({
+        from: './public/homepage-images',
+
+        // optional target path, relative to the output dir
+        to: 'homepage-images/[path][name].[ext]',
+    })
+
+    .copyFiles({
+        from: './public/bundles/easyadmin',
+
+        // optional target path, relative to the output dir
+        to: 'admin/[path][name].[ext]',
+    })
+
+    // This next config is only actually needed to upload our test fixture
+    // images for the demo. In a prod setting you probably wouldn't need this!
+    .copyFiles({
+        from: './public/uploads',
+
+        // optional target path, relative to the output dir
+        to: 'uploads/[path][name].[ext]',
+    })
+
     // public path used by the web server to access the output path
     .setPublicPath('/build')
     // only needed for CDN's or sub-directory deploy
@@ -68,5 +92,13 @@ Encore
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
 ;
+
+if (Encore.isProduction()) {
+    Encore.setPublicPath('https://s3-eu-west-1.amazonaws.com/assets.scratch-dot-com');
+    // guarantee that the keys in manifest.json are *still*
+    // prefixed with build/
+    // (e.g. "build/dashboard.js": "https://my-cool-app.com.global.prod.fastly.net/dashboard.js")
+    Encore.setManifestKeyPrefix('build/');
+}
 
 module.exports = Encore.getWebpackConfig();

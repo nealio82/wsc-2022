@@ -4,12 +4,20 @@ custom:
     dbUsername: 'SZaJ1DJKDcACk1y1' # should really use secrets manager for this
     dbPassword: 'Lo1okFQg0Ox4ufTe2X4M' # should really use secrets manager for this
     dbName: 'scratch_dot_com' # should really use secrets manager for this
+    assetsBucketName: assets.scratch-dot-com
+
+    s3Sync:
+      # A simple configuration for copying static assets
+      - bucketName: ${self:custom.assetsBucketName}
+        localDir: public/build
 
 provider:
     name: aws
     region: eu-west-1
     runtime: provided.al2
     environment:
+        APP_ENV: prod
+        ASSETS_BASE_URL: 'https://s3-eu-west-1.amazonaws.com/${self:custom.assetsBucketName}'
         DATABASE_URL:
             !Sub
             - 'mysql://${self:custom.dbUsername}:${self:custom.dbPassword}@${DB_ENDPOINT}:3306/${self:custom.dbName}?serverVersion=5.7&charset=utf8mb4'
@@ -24,6 +32,7 @@ provider:
 
 plugins:
   - ./vendor/bref/bref
+  - serverless-s3-sync
 
 functions:
     web: # don't forget to change this from the default 'api'
@@ -44,6 +53,7 @@ functions:
 resources:
     - ${file(./serverless-config/network-resources.yml)}
     - ${file(./serverless-config/database-resources.yml)}
+    - ${file(./serverless-config/s3-assets-resources.yml)}
 
 # Exclude files from deployment
 package:

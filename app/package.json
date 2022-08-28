@@ -6,6 +6,7 @@
     "jquery": "^3.6.0",
     "sass": "^1.54.4",
     "sass-loader": "^13.0.0",
+    "serverless-s3-sync": "^3.0.0",
     "webpack-notifier": "^1.15.0"
   },
   "scripts": {
@@ -14,5 +15,8 @@
     "watch": "encore dev --watch",
     "build": "encore production --progress",
     "test": "jest"
+  },
+  "dependencies": {
+    "file-loader": "^6.2.0"
   }
 }
