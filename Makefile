@@ -25,6 +25,7 @@ db: ## (Re)creates the development database (with migrations)
 	$(APP) bin/console doctrine:database:create
 	$(APP) bin/console doctrine:schema:create
 	$(APP) bin/console doctrine:fixtures:load
+	$(APP) bin/console dynamodb:create-sessions-table --force
 
 ##@ Frontend
 

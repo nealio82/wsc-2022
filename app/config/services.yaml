@@ -29,6 +29,23 @@ services:
             $cdnBaseUrls:
                 - '%env(ASSETS_BASE_URL)%/admin'
 
+    Aws\DynamoDb\DynamoDbClient:
+        class: Aws\DynamoDb\DynamoDbClient
+        arguments:
+            -
+                region: '%env(AWS_STACK_REGION)%'
+                endpoint: '%env(DYNAMO_DB_ENDPOINT)%'
+                version: 'latest'
+
+    session.dynamodb_handler:
+        class: Aws\DynamoDb\SessionHandler
+        factory: ['Aws\DynamoDb\SessionHandler', fromClient]
+        arguments: ['@Aws\DynamoDb\DynamoDbClient', { table_name: '%env(SESSIONS_TABLE_NAME)%' }]
+
+    App\Command\CreateDynamoDbSessionsTableCommand:
+        arguments:
+            $sessionsTableName: '%env(SESSIONS_TABLE_NAME)%'
+
 when@prod:
     services:
         App\Controller\Admin\CDNAssetsPackage:

@@ -59,3 +59,40 @@ Resources:
         - Ref: ServerlessSubnetA
         - Ref: ServerlessSubnetB
         - Ref: ServerlessSubnetC
+
+  RouteTableA:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref ServerlessVPC
+      Tags:
+        - Key: Name
+          Value: Public
+  RouteTableB:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref ServerlessVPC
+      Tags:
+        - Key: Name
+          Value: 'B Public'
+  RouteTableC:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref ServerlessVPC
+      Tags:
+        - Key: Name
+          Value: 'C Public'
+  RouteTableAssociationA:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref ServerlessSubnetA
+      RouteTableId: !Ref RouteTableA
+  RouteTableAssociationB:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref ServerlessSubnetB
+      RouteTableId: !Ref RouteTableB
+  RouteTableAssociationC:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref ServerlessSubnetC
+      RouteTableId: !Ref RouteTableC

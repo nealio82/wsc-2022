@@ -5,6 +5,7 @@ custom:
     dbPassword: 'Lo1okFQg0Ox4ufTe2X4M' # should really use secrets manager for this
     dbName: 'scratch_dot_com' # should really use secrets manager for this
     assetsBucketName: assets.scratch-dot-com
+    sessionsTableName: scratch-dot-com-sessions
 
     s3Sync:
       # A simple configuration for copying static assets
@@ -22,6 +23,23 @@ provider:
             !Sub
             - 'mysql://${self:custom.dbUsername}:${self:custom.dbPassword}@${DB_ENDPOINT}:3306/${self:custom.dbName}?serverVersion=5.7&charset=utf8mb4'
             - { DB_ENDPOINT: !GetAtt 'RDSCluster.Endpoint.Address' }
+        SESSIONS_TABLE_NAME: ${self:custom.sessionsTableName}
+        # We can't use AWS_REGION or AWS_DEFAULT_REGION because those are reserved keys
+        AWS_STACK_REGION: ${self:provider.region}
+        DYNAMO_DB_ENDPOINT: 'https://dynamodb.${self:provider.region}.amazonaws.com'
+
+    iam:
+        role:
+            statements:
+                - Effect: Allow
+                  Action:
+                    - 'dynamodb:CreateTable'
+                    - 'dynamodb:DeleteItem'
+                    - 'dynamodb:GetItem'
+                    - 'dynamodb:UpdateItem'
+                    - 'dynamodb:UpdateTimeToLive'
+                  Resource: 'arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/${self:custom.sessionsTableName}'
+
     vpc:
         securityGroupIds:
             - !GetAtt ServerlessSecurityGroup.GroupId
@@ -54,6 +72,7 @@ resources:
     - ${file(./serverless-config/network-resources.yml)}
     - ${file(./serverless-config/database-resources.yml)}
     - ${file(./serverless-config/s3-assets-resources.yml)}
+    - ${file(./serverless-config/dynamodb-resources.yml)}
 
 # Exclude files from deployment
 package:
