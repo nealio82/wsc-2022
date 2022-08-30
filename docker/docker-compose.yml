@@ -35,7 +35,8 @@ services:
       APP_ENV: dev
       APP_SECRET: secret
       MAILER_DSN: 'smtp://mailhog:1025'
-      MESSENGER_TRANSPORT_DSN: 'amqp://guest:guest@rabbitmq:5672/%2f/messages'
+#      MESSENGER_TRANSPORT_DSN: 'amqp://guest:guest@rabbitmq:5672/%2f/messages'
+      MESSENGER_TRANSPORT_DSN: 'https://sqs.eu-west-1.amazonaws.com/493258248811/scratch-dot-com-messages'
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_DEFAULT_REGION: eu-west-1

@@ -1,0 +1,19 @@
+Resources:
+  MessageQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ${self:custom.messageQueueName}
+
+  SQSVPCEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: !Sub 'com.amazonaws.${self:provider.region}.sqs'
+      SubnetIds:
+        - Ref: ServerlessSubnetAPrivate
+        - Ref: ServerlessSubnetBPrivate
+        - Ref: ServerlessSubnetCPrivate
+      VpcId: !Ref ServerlessVPC
+      VpcEndpointType: Interface
+      SecurityGroupIds:
+        - !GetAtt ServerlessSecurityGroup.GroupId
+      PrivateDnsEnabled: true

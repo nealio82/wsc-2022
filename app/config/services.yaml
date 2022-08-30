@@ -58,6 +58,17 @@ services:
         arguments:
             $sessionsTableName: '%env(SESSIONS_TABLE_NAME)%'
 
+    Bref\Symfony\Messenger\Service\Sqs\SqsConsumer:
+        public: true
+        autowire: true
+        arguments:
+            # Pass the transport name used in config/packages/messenger.yaml
+            $transportName: 'async'
+            # true enables partial SQS batch failure
+            # Enabling this without proper SQS config will consider all your messages successful
+            # See https://bref.sh/docs/function/handlers.html#partial-batch-response for more details.
+            $partialBatchFailure: false
+
 when@prod:
     services:
         App\Controller\Admin\CDNAssetsPackage:

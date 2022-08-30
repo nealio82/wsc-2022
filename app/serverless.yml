@@ -6,6 +6,7 @@ custom:
     dbName: 'scratch_dot_com' # should really use secrets manager for this
     assetsBucketName: assets.scratch-dot-com
     sessionsTableName: scratch-dot-com-sessions
+    messageQueueName: scratch-dot-com-messages
 
     s3Sync:
       # A simple configuration for copying static assets
@@ -28,6 +29,7 @@ provider:
         # We can't use AWS_REGION or AWS_DEFAULT_REGION because those are reserved keys
         AWS_STACK_REGION: ${self:provider.region}
         DYNAMO_DB_ENDPOINT: 'https://dynamodb.${self:provider.region}.amazonaws.com'
+        MESSENGER_TRANSPORT_DSN: !Ref MessageQueue
 
     iam:
         role:
@@ -46,6 +48,11 @@ provider:
                     - 's3:PutObject'
                   Resource:
                     - 'arn:aws:s3:::${self:custom.assetsBucketName}/*'
+                - Effect: Allow
+                  Action:
+                    - 'sqs:*'
+                  Resource:
+                    - 'arn:aws:sqs:${self:provider.region}:${aws:accountId}:${self:custom.messageQueueName}'
 
     vpc:
         securityGroupIds:
@@ -75,11 +82,25 @@ functions:
             - ${bref:layer.php-81} # PHP runtime
             - ${bref:layer.console} # Console layer
 
+    queue-worker:
+      handler: bin/consumer.php
+      timeout: 20 # in seconds
+      reservedConcurrency: 5 # max. 5 messages processed in parallel
+      layers:
+        - ${bref:layer.php-81}
+      events:
+        # Read more at https://www.serverless.com/framework/docs/providers/aws/events/sqs/
+        - sqs:
+            arn: arn:aws:sqs:${self:provider.region}:${aws:accountId}:${self:custom.messageQueueName}
+            # Only 1 item at a time to simplify error handling
+            batchSize: 1
+
 resources:
     - ${file(./serverless-config/network-resources.yml)}
     - ${file(./serverless-config/database-resources.yml)}
     - ${file(./serverless-config/s3-assets-resources.yml)}
     - ${file(./serverless-config/dynamodb-resources.yml)}
+    - ${file(./serverless-config/sqs-resources.yml)}
 
 # Exclude files from deployment
 package:

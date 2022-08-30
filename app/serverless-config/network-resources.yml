@@ -3,6 +3,8 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: "10.0.0.0/16"
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
   ServerlessSubnetA:
     DependsOn: ServerlessVPC
     Type: AWS::EC2::Subnet
@@ -27,6 +29,30 @@ Resources:
         Ref: ServerlessVPC
       AvailabilityZone: ${self:provider.region}c
       CidrBlock: "10.0.2.0/24"
+  ServerlessSubnetAPrivate:
+    DependsOn: ServerlessVPC
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: ServerlessVPC
+      AvailabilityZone: ${self:provider.region}a
+      CidrBlock: "10.0.3.0/24"
+  ServerlessSubnetBPrivate:
+    DependsOn: ServerlessVPC
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: ServerlessVPC
+      AvailabilityZone: ${self:provider.region}b
+      CidrBlock: "10.0.4.0/24"
+  ServerlessSubnetCPrivate:
+    DependsOn: ServerlessVPC
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: ServerlessVPC
+      AvailabilityZone: ${self:provider.region}c
+      CidrBlock: "10.0.5.0/24"
   ServerlessSecurityGroup:
     DependsOn: ServerlessVPC
     Type: AWS::EC2::SecurityGroup
@@ -66,7 +92,7 @@ Resources:
       VpcId: !Ref ServerlessVPC
       Tags:
         - Key: Name
-          Value: Public
+          Value: 'A Public'
   RouteTableB:
     Type: 'AWS::EC2::RouteTable'
     Properties:
@@ -81,6 +107,27 @@ Resources:
       Tags:
         - Key: Name
           Value: 'C Public'
+  RouteTableAPrivate:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref ServerlessVPC
+      Tags:
+        - Key: Name
+          Value: 'A Private'
+  RouteTableBPrivate:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref ServerlessVPC
+      Tags:
+        - Key: Name
+          Value: 'B Private'
+  RouteTableCPrivate:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref ServerlessVPC
+      Tags:
+        - Key: Name
+          Value: 'C Private'
   RouteTableAssociationA:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
@@ -96,3 +143,50 @@ Resources:
     Properties:
       SubnetId: !Ref ServerlessSubnetC
       RouteTableId: !Ref RouteTableC
+  RouteTableAssociationAPrivate:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref ServerlessSubnetAPrivate
+      RouteTableId: !Ref RouteTableAPrivate
+  RouteTableAssociationBPrivate:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref ServerlessSubnetBPrivate
+      RouteTableId: !Ref RouteTableBPrivate
+  RouteTableAssociationCPrivate:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref ServerlessSubnetCPrivate
+      RouteTableId: !Ref RouteTableCPrivate
+  RouteTablePublicAInternetRoute:
+    Type: 'AWS::EC2::Route'
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTableA
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref InternetGateway
+  RouteTablePublicBInternetRoute:
+    Type: 'AWS::EC2::Route'
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTableB
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref InternetGateway
+  RouteTablePublicCInternetRoute:
+    Type: 'AWS::EC2::Route'
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref RouteTableC
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref InternetGateway
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+  EgressOnlyInternetGateway:
+    Type: 'AWS::EC2::EgressOnlyInternetGateway'
+    Properties:
+      VpcId: !Ref ServerlessVPC
+  VPCGatewayAttachment:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: !Ref ServerlessVPC
+      InternetGatewayId: !Ref InternetGateway

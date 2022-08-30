@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "aws/aws-sdk-php": "^3.234",
         "bref/bref": "^1.7",
+        "bref/symfony-messenger": "^0.5.0",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/doctrine-migrations-bundle": "^3.2",
