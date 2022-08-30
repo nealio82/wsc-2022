@@ -31,6 +31,7 @@ services:
       - rabbitmq
     environment:
       ASSETS_BASE_URL: 'http://localhost'
+      ASSETS_BUCKET_NAME: 'assets.scratch-dot-com'
       APP_ENV: dev
       APP_SECRET: secret
       MAILER_DSN: 'smtp://mailhog:1025'

@@ -6,7 +6,11 @@ Resources:
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders: ["*"]
-            AllowedMethods: [GET]
+            AllowedMethods: [
+                "GET",
+                "POST",
+                "PUT"
+            ]
             AllowedOrigins: ["*"]
 
   # The policy that makes the bucket publicly readable
@@ -18,6 +22,9 @@ Resources:
         Statement:
           -   Effect: Allow
               Principal: '*' # everyone
-              Action: 's3:GetObject' # to read
+              Action: [
+                  's3:GetObject',
+                  's3:PutObject',
+              ]
               Resource: !Join ['/', [!GetAtt Assets.Arn, '*']] # things in the bucket
           # alternatively you can write out Resource: 'arn:aws:s3:::<bucket-name>/*'

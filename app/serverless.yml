@@ -19,6 +19,7 @@ provider:
     environment:
         APP_ENV: prod
         ASSETS_BASE_URL: 'https://s3-eu-west-1.amazonaws.com/${self:custom.assetsBucketName}'
+        ASSETS_BUCKET_NAME: ${self:custom.assetsBucketName}
         DATABASE_URL:
             !Sub
             - 'mysql://${self:custom.dbUsername}:${self:custom.dbPassword}@${DB_ENDPOINT}:3306/${self:custom.dbName}?serverVersion=5.7&charset=utf8mb4'
@@ -39,6 +40,12 @@ provider:
                     - 'dynamodb:UpdateItem'
                     - 'dynamodb:UpdateTimeToLive'
                   Resource: 'arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/${self:custom.sessionsTableName}'
+                - Effect: Allow
+                  Action:
+                    - 's3:GetObject'
+                    - 's3:PutObject'
+                  Resource:
+                    - 'arn:aws:s3:::${self:custom.assetsBucketName}/*'
 
     vpc:
         securityGroupIds:
