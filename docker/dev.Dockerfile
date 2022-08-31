@@ -1,5 +1,3 @@
-#FROM docker.io/bref/php-81-fpm-dev:1.5.5
-
 FROM php:8.1-fpm
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
@@ -19,3 +17,8 @@ RUN curl -sL https://github.com/vimeo/psalm/releases/download/4.22.0/psalm.phar 
 
 # Composer
 COPY --from=docker.io/composer:2.3.4 /usr/bin/composer /usr/bin/
+
+RUN apt update
+RUN apt install nodejs npm -y
+
+RUN npm i -g serverless
